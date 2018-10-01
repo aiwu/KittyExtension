@@ -257,22 +257,7 @@ $(function() {
                 } else {
                     var cdTbl = ["Fast", "Swift", "Snappy", "Brisk", "Plodding", "Slow", "Sluggish", "Catatonic"];
                     var cdValueTbl = ["Fast","Swift","Swift","Snappy","Snappy","Brisk","Brisk","Plodding","Plodding","Slow","Slow","Sluggish","Sluggish","Catatonic"];
-                    for (var x in data.auctions) {
-                        var cdValue = cdTbl.indexOf(cdValueTbl[data.auctions[x].kitty.status.cooldown_index]);
-                        if (stats.cd && stats.fast > 1) {
-                            renderPrice(element, finishPrice(data, x), query + search, false);
-                            return;
-                        } else if (stats.fast > 4 ||  stats.fast >= cdValue) {
-                            renderPrice(element, finishPrice(data, x), query + search, false);
-                            return;
-                        } else if (stats.cd && data.auctions[x].kitty.status.is_ready) {
-                            renderPrice(element, finishPrice(data, x), query + search, false);
-                            return;
-                        } if (x == data.auctions.length - 1) {
-                            renderPrice(element, finishPrice(data, x), query + search, true);
-                            return;
-                        }
-                    }
+                    parseData(data);
 
 
                 }
@@ -294,6 +279,25 @@ $(function() {
         var ul = element.getElementsByClassName("extWrapper")[0];
         ul.innerHTML += "<ul class='extAttUl' onclick='searchSimilarKitties(event, &quot;"+ url +"&quot;)'><li style='list-style: none;' class='extAtt'><span style='font-weight: 500;'>value:</span> " + price + "</li></ul>";
     }
+    
+    function parseData(data) {
+        for (var x in data.auctions) {
+            var cdValue = cdTbl.indexOf(cdValueTbl[data.auctions[x].kitty.status.cooldown_index]);
+            if (stats.cd && stats.fast > 1) {
+                renderPrice(element, finishPrice(data, x), query + search, false);
+                return;
+            } else if (stats.fast > 4 ||  stats.fast >= cdValue) {
+                renderPrice(element, finishPrice(data, x), query + search, false);
+                return;
+            } else if (stats.cd && data.auctions[x].kitty.status.is_ready) {
+                renderPrice(element, finishPrice(data, x), query + search, false);
+                return;
+            } if (x == data.auctions.length - 1) {
+                renderPrice(element, finishPrice(data, x), query + search, true);
+                return;
+            }
+        }
+     }
 
     function getBestRares(cattributes, adjust) {
         var best = '';
